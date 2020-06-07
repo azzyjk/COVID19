@@ -1,8 +1,9 @@
 from bs4 import BeautifulSoup
-from urllib.request import urlopen
 import requests
 from function import *
-import time
+import pprint
+
+locList = {'loc':[]}
 
 site = "http://ncov.mohw.go.kr/bdBoardList_Real.do?brdId=1&brdGubun=12&ncvContSeq=&contSeq=&board_id=&gubun="
 
@@ -12,9 +13,10 @@ infoCOVID = bsObject.find_all('td')
 strCOVID = replaceTag(str(infoCOVID))
 
 strLists = strCOVID.split('\n')
-COIVDlists = []
 
 for data in strLists:
-    checkLoc(COIVDlists, str(data))
+    checkLoc(locList, str(data))
 
-print(COIVDlists)
+f = open("./nodeJS/COVIDAPI/test.txt", 'w')
+f.write(str(locList))
+f.close()
