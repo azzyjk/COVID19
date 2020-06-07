@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 import requests
 from function import *
 import pprint
+import json
 
 locList = {'loc':[]}
 
@@ -17,6 +18,10 @@ strLists = strCOVID.split('\n')
 for data in strLists:
     checkLoc(locList, str(data))
 
-f = open("./nodeJS/COVIDAPI/test.txt", 'w')
-f.write(str(locList))
+# print(locList)
+jsonTest = json.dumps(locList, ensure_ascii=False)
+print(jsonTest)
+
+f = open("./nodeJS/COVIDAPI/location.json", 'w', encoding="UTF-8")
+f.write(jsonTest)
 f.close()
