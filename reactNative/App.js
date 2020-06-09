@@ -12,6 +12,7 @@ export default class App extends React.Component {
   };
   componentDidMount() {
     this._getUserLocation();
+    this._getCOVIDLocation();
   }
   render() {
     const { COVID } = this.state;
@@ -22,6 +23,19 @@ export default class App extends React.Component {
     );
   }
 
+  _getCOVIDLocation = async () => {
+    try {
+      const {
+        data: { loc },
+      } = await axios.get(`http://192.168.0.14:3000/location`);
+
+      this.setState({
+        COVID: loc,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
   _getUserLocation = async () => {
     await Location.requestPermissionsAsync();
     const {
