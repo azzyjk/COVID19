@@ -22,13 +22,31 @@ export default class App extends React.Component {
       </View>
     );
   }
-
+  _getCOIVDLonLat = async (address) => {
+    try {
+      const {
+        data: {
+          coordinateInfo: { coordinate },
+        },
+      } = await axios.get(
+        `https://apis.openapi.sk.com/tmap/geo/fullAddrGeo?
+         &version=1
+         &fullAddr=${address}
+         &appKey=${TMAP_API}`
+      );
+      console.log(coordinate[0].newLon);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   _getCOVIDLocation = async () => {
     try {
       const {
         data: { loc },
       } = await axios.get(`http://192.168.0.14:3000/location`);
-
+      loc.forEach((element) => {
+        this._getCOIVDLonLat(element);
+      });
       this.setState({
         COVID: loc,
       });
