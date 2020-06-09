@@ -22,6 +22,27 @@ export default class App extends React.Component {
       </View>
     );
   }
+  // _noticeAlert() {}
+  _getDistance = async (coLon, coLat) => {
+    const { usrLon, usrLat } = this.state;
+    try {
+      const {
+        data: {
+          distanceInfo: { distance },
+        },
+      } = await axios.get(
+        `https://apis.openapi.sk.com/tmap/routes/distance?version=1
+        &startX=${usrLon}
+        &startY=${usrLat}
+        &endX=${coLon}
+        &endY=${coLat}
+        &appkey=${TMAP_API}`
+      );
+      console.log(distance);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   _getCOIVDLonLat = async (address) => {
     try {
       const {
@@ -34,7 +55,7 @@ export default class App extends React.Component {
          &fullAddr=${address}
          &appKey=${TMAP_API}`
       );
-      console.log(coordinate[0].newLon);
+      this._getDistance(coordinate[0].newLon, coordinate[0].newLat);
     } catch (error) {
       console.log(error);
     }
