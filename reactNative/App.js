@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Alert } from "react-native";
 import axios from "axios";
 import { TMAP_API } from "react-native-dotenv";
 import * as Location from "expo-location";
@@ -22,7 +22,9 @@ export default class App extends React.Component {
       </View>
     );
   }
-  // _noticeAlert() {}
+  _noticeAlert() {
+    Alert.alert("위험", "코로나 위험지역과 500m내에 있습니다.");
+  }
   _getDistance = async (coLon, coLat) => {
     const { usrLon, usrLat } = this.state;
     try {
@@ -39,6 +41,9 @@ export default class App extends React.Component {
         &appkey=${TMAP_API}`
       );
       console.log(distance);
+      if (distance < 500) {
+        this._noticeAlert();
+      }
     } catch (error) {
       console.log(error);
     }
