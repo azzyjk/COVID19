@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, Alert, Dimensions } from "react-native";
 import axios from "axios";
 import { TMAP_API } from "react-native-dotenv";
 import * as Location from "expo-location";
-import MapView from "react-native-maps";
+import MapView, { Marker } from "react-native-maps";
 
 export default class App extends React.Component {
   state = {
@@ -20,14 +20,21 @@ export default class App extends React.Component {
     return (
       <View style={styles.container}>
         <MapView
+          style={styles.mapStyle}
           initialRegion={{
             latitude: 37.412068,
             longitude: 126.974086,
             latitudeDelta: 0.0002,
             longitudeDelta: 0.0021,
           }}
-          style={styles.mapStyle}
-        />
+        >
+          <Marker
+            coordinate={{
+              latitude: 37.412068,
+              longitude: 126.974086,
+            }}
+          />
+        </MapView>
       </View>
     );
   }
