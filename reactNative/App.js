@@ -12,39 +12,48 @@ export default class App extends React.Component {
     usrLat: 0,
     usrLon: 0,
     COVID: {},
+    isLoading: false,
   };
   componentDidMount() {
     this._getUserLocation();
-    this._getCOVIDLocation();
+    // this._getCOVIDLocation();
   }
   render() {
-    const { COVID, usrLat, usrLon } = this.state;
-    return (
-      <View style={styles.container}>
-        <MapView
-          style={styles.mapStyle}
-          initialRegion={{
-            latitude: 37.410717,
-            longitude: 126.972513,
-            latitudeDelta: 0.0052,
-            longitudeDelta: 0.0061,
-          }}
-        >
-          <Circle
-            center={{
+    const { COVID, usrLat, usrLon, isLoading } = this.state;
+    if (isLoading === false) {
+      return (
+        <View style={styles.container}>
+          <Text> Loading... </Text>
+        </View>
+      );
+    } else {
+      return (
+        <View style={styles.container}>
+          <MapView
+            style={styles.mapStyle}
+            initialRegion={{
               latitude: usrLat,
               longitude: usrLon,
+              latitudeDelta: 0.0052,
+              longitudeDelta: 0.0061,
             }}
-            radius={50}
-            strokeWidth={2}
-            strokeColor="#000DFF"
-          />
-          {Object.values(COVID).map((location) => (
-            <Map key={location.id} {...location} />
-          ))}
-        </MapView>
-      </View>
-    );
+          >
+            <Circle
+              center={{
+                latitude: usrLat,
+                longitude: usrLon,
+              }}
+              radius={50}
+              strokeWidth={2}
+              strokeColor="#000DFF"
+            />
+            {Object.values(COVID).map((location) => (
+              <Map key={location.id} {...location} />
+            ))}
+          </MapView>
+        </View>
+      );
+    }
   }
   _addCOVID = (address, longitude, latitude) => {
     this.setState((prevState) => {
@@ -132,6 +141,7 @@ export default class App extends React.Component {
     this.setState({
       usrLat: latitude,
       usrLon: longitude,
+      isLoading: true,
     });
   };
 }
