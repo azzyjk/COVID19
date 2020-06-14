@@ -9,15 +9,15 @@ export default class Map extends React.Component {
     latitude: PropTypes.number.isRequired,
   };
   render() {
-    const { id, address, latitude, longitude } = this.props;
+    const { id, date, name, address, latitude, longitude } = this.props;
     return (
       <Marker
         coordinate={{
           latitude: latitude,
           longitude: longitude,
         }}
-        title={address}
-        description="test"
+        title={name + date}
+        description={address}
       ></Marker>
     );
   }

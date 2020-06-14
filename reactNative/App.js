@@ -16,7 +16,7 @@ export default class App extends React.Component {
   };
   componentDidMount() {
     this._getUserLocation();
-    // this._getCOVIDLocation();
+    this._getCOVIDLocation();
   }
   render() {
     const { COVID, usrLat, usrLon, isLoading } = this.state;
@@ -55,13 +55,15 @@ export default class App extends React.Component {
       );
     }
   }
-  _addCOVID = (address, longitude, latitude) => {
+  _addCOVID = (element, longitude, latitude) => {
     this.setState((prevState) => {
       const ID = uuidv1();
       const newCOVIDObject = {
         [ID]: {
           id: ID,
-          address: address,
+          name: element.name,
+          address: element.address,
+          date: element.date,
           latitude: parseFloat(latitude),
           longitude: parseFloat(longitude),
         },
@@ -94,7 +96,6 @@ export default class App extends React.Component {
         &endY=${coLat}
         &appkey=${TMAP_API}`
       );
-      console.log(distance);
       if (distance < 500) {
         this._noticeAlert();
       }
@@ -102,7 +103,7 @@ export default class App extends React.Component {
       console.log(error);
     }
   };
-  _getCOIVDLonLat = async (address) => {
+  _getCOIVDLonLat = async (element) => {
     try {
       const {
         data: {
@@ -111,21 +112,19 @@ export default class App extends React.Component {
       } = await axios.get(
         `https://apis.openapi.sk.com/tmap/geo/fullAddrGeo?
          &version=1
-         &fullAddr=${address}
+         &fullAddr=${element.address}
          &appKey=${TMAP_API}`
       );
       this._getDistance(coordinate[0].newLon, coordinate[0].newLat);
-      this._addCOVID(address, coordinate[0].newLon, coordinate[0].newLat);
+      this._addCOVID(element, coordinate[0].newLon, coordinate[0].newLat);
     } catch (error) {
       console.log(error);
     }
   };
   _getCOVIDLocation = async () => {
     try {
-      const {
-        data: { loc },
-      } = await axios.get(`http://192.168.0.14:3000/location`);
-      loc.forEach((element) => {
+      const { data } = await axios.get(`http://192.168.0.14:3000/location`);
+      data.forEach((element) => {
         this._getCOIVDLonLat(element);
       });
     } catch (error) {
@@ -137,7 +136,12 @@ export default class App extends React.Component {
     const {
       coords: { latitude, longitude },
     } = await Location.getCurrentPositionAsync();
-    this._addCOVID("UserLocation", longitude, latitude);
+    const userInfo = {
+      name: "현재위치",
+      address: "",
+      date: "",
+    };
+    this._addCOVID(userInfo, longitude, latitude);
     this.setState({
       usrLat: latitude,
       usrLon: longitude,
