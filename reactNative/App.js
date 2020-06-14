@@ -34,8 +34,8 @@ export default class App extends React.Component {
             initialRegion={{
               latitude: usrLat,
               longitude: usrLon,
-              latitudeDelta: 0.0052,
-              longitudeDelta: 0.0061,
+              latitudeDelta: 0.0072,
+              longitudeDelta: 0.0121,
             }}
           >
             <Circle
@@ -43,7 +43,7 @@ export default class App extends React.Component {
                 latitude: usrLat,
                 longitude: usrLon,
               }}
-              radius={50}
+              radius={500}
               strokeWidth={2}
               strokeColor="#000DFF"
             />
