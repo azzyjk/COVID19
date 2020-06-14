@@ -2,8 +2,8 @@
 
 ## 목차  
 
->   1. 개요
->   2. 개발환경
+>   1. [개요](#개요)
+>   2. [개발환경](#개발환경)
 
 ### 개요
 - 제작배경
@@ -14,11 +14,11 @@
     > 2. 질병관리본부에서 발표한 집단발생 관련 노출장소 지도에 표시
 
 ### 개발환경
-- Python 3.7  
-    >* BeautifulSoup4  
-
 - NodeJS 12.16
-    >* Express
+    >* axios
+    >* cheerio
+    >* express
+    >* iconv-lite
 
 - React Native
     >* uuidv1
