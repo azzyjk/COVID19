@@ -43,7 +43,7 @@ router.get("/", function (req, res, next) {
     for (var i = 2; i < tdList.length; i += 5) {
       COVIDLoc[now] = {
         name: tdList[i][0],
-        location: tdList[i][1],
+        address: tdList[i][1],
         date: tdList[i + 1][0],
       };
       now++;
