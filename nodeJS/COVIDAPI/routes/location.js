@@ -48,7 +48,6 @@ router.get("/", function (req, res, next) {
       now++;
     }
     res.json(COVIDLoc);
-    console.log(COVIDLoc);
   });
 });
 module.exports = router;
