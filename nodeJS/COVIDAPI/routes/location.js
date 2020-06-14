@@ -3,7 +3,6 @@ const axios = require("axios");
 const cheerio = require("cheerio");
 const iconv = require("iconv-lite");
 var router = express.Router();
-var fs = require("fs");
 
 var url = {
   url:
@@ -52,10 +51,4 @@ router.get("/", function (req, res, next) {
     console.log(COVIDLoc);
   });
 });
-
-router.get("/:id", function (req, res, next) {
-  user = location.find((u) => u.id === parseInt(req.params.id));
-  res.send(user);
-});
-
 module.exports = router;
