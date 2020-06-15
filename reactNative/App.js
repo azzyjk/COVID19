@@ -1,11 +1,20 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, Alert, Dimensions } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Alert,
+  Dimensions,
+  Button,
+} from "react-native";
+import { createStackNavigator, createAppContainer } from "react-navigation";
 import axios from "axios";
 import { TMAP_API, API_URL } from "react-native-dotenv";
 import * as Location from "expo-location";
 import MapView, { Marker, Circle } from "react-native-maps";
 import Map from "./Map";
 import uuidv1 from "uuid/v1";
+import Page from "./Page";
 
 export default class App extends React.Component {
   state = {
@@ -20,6 +29,9 @@ export default class App extends React.Component {
   }
   render() {
     const { COVID, usrLat, usrLon, isLoading } = this.state;
+    const onPressItem = () => {
+      this.props.navigation.navigate("Page");
+    };
     if (isLoading === false) {
       return (
         <View style={styles.container}>
@@ -29,28 +41,33 @@ export default class App extends React.Component {
     } else {
       return (
         <View style={styles.container}>
-          <MapView
-            style={styles.mapStyle}
-            initialRegion={{
-              latitude: usrLat,
-              longitude: usrLon,
-              latitudeDelta: 0.0072,
-              longitudeDelta: 0.0121,
-            }}
-          >
-            <Circle
-              center={{
+          <View style={styles.container}>
+            <MapView
+              style={styles.mapStyle}
+              initialRegion={{
                 latitude: usrLat,
                 longitude: usrLon,
+                latitudeDelta: 0.0072,
+                longitudeDelta: 0.0121,
               }}
-              radius={500}
-              strokeWidth={2}
-              strokeColor="#000DFF"
-            />
-            {Object.values(COVID).map((location) => (
-              <Map key={location.id} {...location} />
-            ))}
-          </MapView>
+            >
+              <Circle
+                center={{
+                  latitude: usrLat,
+                  longitude: usrLon,
+                }}
+                radius={500}
+                strokeWidth={2}
+                strokeColor="#000DFF"
+              />
+              {Object.values(COVID).map((location) => (
+                <Map key={location.id} {...location} />
+              ))}
+            </MapView>
+          </View>
+          <View style={styles.container}>
+            <Button onPress={onPressItem} title="Move" corlor="#000" />
+          </View>
         </View>
       );
     }
