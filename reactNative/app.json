@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "reactNative",
-    "slug": "reactNative",
+    "name": "COVID19 alarm",
+    "slug": "covid19_alarm",
     "platforms": [
       "ios",
       "android",
@@ -22,7 +22,21 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
-    }
+      "supportsTablet": true,
+      "bundleIdentifier": "co.test.app",
+      "config":{
+        "googleMapsApiKey":""
+      }
+    },
+    "android":{
+      "package" : "com.test.app",
+      "config" :{
+        "googleMaps":{
+          "apiKey":""
+        }
+      }
+    },
+    "description": "Alarm about COVID19 danger zone.",
+    "githubUrl": "https://github.com/azzyjk/COVID19"
   }
 }
