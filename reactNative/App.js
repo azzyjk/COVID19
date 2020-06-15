@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View, Alert, Dimensions } from "react-native";
 import axios from "axios";
-import { TMAP_API } from "react-native-dotenv";
+import { TMAP_API, API_URL } from "react-native-dotenv";
 import * as Location from "expo-location";
 import MapView, { Marker, Circle } from "react-native-maps";
 import Map from "./Map";
@@ -123,7 +123,7 @@ export default class App extends React.Component {
   };
   _getCOVIDLocation = async () => {
     try {
-      const { data } = await axios.get(`http://192.168.0.14:3000/location`);
+      const { data } = await axios.get(API_URL);
       data.forEach((element) => {
         this._getCOIVDLonLat(element);
       });
