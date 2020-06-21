@@ -190,5 +190,103 @@ VM인스턴스 생성을 누르면 이처럼 인스턴스를 생성하는 창이
 
 <img src="./picture/Oracle_11.png">  
 
-아래는 서버에 접속이 된 모습이다.
+아래는 서버에 접속이 된 모습이다.  
 <img src="./picture/Server_1.png">  
+
+우리는 nodeJS를 서버에서 실행시킬건데 이 서버는 현재 아무것도 설치가 안된 상태이므로 설치해주기위해 명령어를 입력한다.
+apt에 대해서 업데이트를 하기위한 명령어이다.
+
+    sudo apt-get update
+    sudo apt-get install -y build-essential
+
+이후 노드 JS 12버전을 다운하기 위한 명령어 이다.
+
+    curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash - //그냥 설치하면 원하는 버전이 설치가 되지 않을 수 있으므로 12버전을 설치하도록 하는 것이다.
+    sudo apt-get install -y nodejs
+
+설치가 잘 되었는지 확인하기 위해 아래의 명령어를 입력해본다.
+
+    node --version
+    npm --version
+
+아래와 같이 버전이 나왔다면 제대로 설치가 된 것이다.
+
+    ubuntu@for-work:~$ node --version
+    v12.18.0
+    ubuntu@for-work:~$ npm --version
+    6.14.4
+
+이후 서버에 코드를 올려야하는데 이때 git과 github를 사용하기로 하였다.
+
+먼저 ```git```을 입력해 설치가 되어있는지 확인해 준다.
+명령어를 입력했을때 git에대한 여러 커맨드들이 나온다면 설치가 되어있는 것이다.
+
+git에 나의 대한 정보를 넣어준다.
+
+    git config --global user.name "user.name"
+    git config --global user.email "user.email"
+
+잫 넣어졌는지 확인하려면 ```git config --list```를 입력해 확인해주면 된다.
+이후 github에서 코드를 받아올 때 ssh연결로 편하게 받아오기 위해 키를 만들어서 등록하도록 한다.
+위에서 한 키생성하는 방법을 똑같이 해준다.
+
+### 깃에 sshkey 등록
+
+그 후 ```cat ~/.ssh/id_rsa.pub```을 입력하여 나온 결과를 복사해준다.
+Github 사이트에 접속하여 로그인해준다.
+우측 상단에 아이콘을 누르고 Setting에 들어가 준다.  
+<img src="./picture/Github_1.png">  
+
+Setting 에 들어가면 좌측에 SSH and GPG keys가 있는데 접속 후 New SSH key를 눌러준다.
+<img src="./picture/Github_2.png">  
+
+그럼 아래와 같이 key를 추가하는 곳이 나오는데 Title에는 프로젝트 이름이나 제목을 적고 Key에는 아까 복사한 키값을 넣으면 된다.
+<img src="./picture/Github_3.png">  
+
+### 서버에 git repository 저장
+그다음엔 서버에 가져올 repository의 주소를 지정해 주어야 하는데 먼저 Github에 들어가서 원하는 repository에 들어간다.
+우측에 Clone or download를 클릭하면 사이트 주소같은게 나오는데 첨엔 Clone with HTTPS로 되있을 것이다.
+우측에 Use SSH를 눌러 Clone with SSH로 변경해주자.
+그 뒤에 주소를 복사한다.
+<img src="./picture/Github_4.png">  
+
+다시 서버로 돌아가 repository를 Clone하도록 한다.
+
+    git clone git@github.com:azzyjk/COVID.git
+
+여기서 그냥 실행하면 안되고 기존에 설치했던 모듈들과 nodemon을 설치한 뒤 nodemon start를 쳐준다.
+
+### 방화벽 설정
+네트워킹 - 가상 클라우드 네트워크에 들어가서 존재하는 항목을 클릭하면 가상 클라우드 네트워크 세부정보로 들어갈 수 있는데 아래 리소스에서 보안목록을 클릭해준다.
+<img src="./picture/Oracle_12.png"> 
+
+이후 존재하는 항목을 클릭하면 수신규칙으로 들어갈 수 있는데 나는 3000포트를 사용할 것이므로 3000번 포트를 열어주도록 하였다.
+<img src="./picture/Oracle_13.png"> 
+수신 규칙 추가를 클릭해 준 후 아래와 같이 소스 CIDR, IP 프로토콜, 대상 포트 범위, 설명을 적고 수신 규칙 추가를 눌러준다.
+<img src="./picture/Oracle_14.png"> 
+아래와 같이 추가가 되는것을 볼 수 있다.
+<img src="./picture/Oracle_15.png"> 
+
+이제 오라클 사이트에서의 방화벽 설정 말고 직접 서버에 접속하여 설정을 해줘야하는데
+서버에 접속 후 아래의 명령어를 입력해주면 된다.
+
+    sudo iptables -I INPUT 5 -i ens3 -p tcp --dport 3000 -m state --state NEW,ESTABLISHED -j ACCEPT
+
+이후 ```nodemon start```을 통해 서버를 실행시키고 ```해당 서버의 주소:3000/location```을 하면 localhost를 했을때와 같이 정보가 뜨는것을 볼 수 있다.
+
+<img src="./picture/Express_2.png">
+
+### 영구적으로 서버에서 실행
+```nodemon start```를 입력하고 서버를 종료하고 ```해당 서버의 주소:3000/location```를 접속해보았다면 연결이 되지 않는다는 것을 알 수 있다.
+이는 서버와 접속이 종료되면서 서버에서 실행중인 프로세스를 종료한 것이다.
+우리는 항상 서버에 접속하기 귀찮거나 그럴 필요가 없기 때문에 서버와의 연결을 종료해도 계속 실행되도록 해주겠다.
+
+    npm install -g forever
+
+로 ```forever```을 설치해준다.
+이후 ```forever```을 입력해 제대로 설치가 되었는지 확인 후 아래의 명령어로 실행시키면 된다.
+
+    forever start -c nodemon ./bin/www
+
+이후 서버와의 연결을 종료하여도 사이트에 접속이 가능한 것을 볼 수 있다.
+<img src="./picture/Express_2.png">
