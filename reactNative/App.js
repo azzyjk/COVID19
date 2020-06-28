@@ -25,7 +25,7 @@ export default class App extends React.Component {
   };
   componentDidMount() {
     this._getUserLocation();
-    this._getCOVIDLocation();
+    // this._getCOVIDLocation();
   }
   render() {
     const { COVID, usrLat, usrLon, isLoading } = this.state;
