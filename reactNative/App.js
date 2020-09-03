@@ -7,8 +7,9 @@ import {
   Dimensions,
   Button,
 } from "react-native";
-import { createStackNavigator, createAppContainer } from "react-navigation";
 import axios from "axios";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
 import { TMAP_API, API_URL } from "react-native-dotenv";
 import * as Location from "expo-location";
 import MapView, { Marker, Circle } from "react-native-maps";
@@ -65,9 +66,9 @@ export default class App extends React.Component {
               ))}
             </MapView>
           </View>
-          <View style={styles.container}>
+          {/* <View style={styles.container}>
             <Button onPress={onPressItem} title="Move" corlor="#000" />
-          </View>
+          </View> */}
         </View>
       );
     }
