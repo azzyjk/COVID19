@@ -6,13 +6,15 @@ import {
   Alert,
   Dimensions,
   Button,
+  StatusBar,
 } from "react-native";
 import axios from "axios";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, StackActions } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { TMAP_API, API_URL } from "react-native-dotenv";
 import * as Location from "expo-location";
 import MapView, { Marker, Circle } from "react-native-maps";
+import Point from "./Point";
 import Map from "./Map";
 import uuidv1 from "uuid/v1";
 import Page from "./Page";
@@ -30,9 +32,7 @@ export default class App extends React.Component {
   }
   render() {
     const { COVID, usrLat, usrLon, isLoading } = this.state;
-    const onPressItem = () => {
-      this.props.navigation.navigate("Page");
-    };
+    const Stack = createStackNavigator();
     if (isLoading === false) {
       return (
         <View style={styles.container}>
@@ -41,38 +41,38 @@ export default class App extends React.Component {
       );
     } else {
       return (
-        <View style={styles.container}>
-          <View style={styles.container}>
-            <MapView
-              style={styles.mapStyle}
-              initialRegion={{
-                latitude: usrLat,
-                longitude: usrLon,
-                latitudeDelta: 0.0072,
-                longitudeDelta: 0.0121,
-              }}
-            >
-              <Circle
-                center={{
-                  latitude: usrLat,
-                  longitude: usrLon,
-                }}
-                radius={500}
-                strokeWidth={2}
-                strokeColor="#000DFF"
-              />
-              {Object.values(COVID).map((location) => (
-                <Map key={location.id} {...location} />
-              ))}
-            </MapView>
-          </View>
-          {/* <View style={styles.container}>
-            <Button onPress={onPressItem} title="Move" corlor="#000" />
-          </View> */}
-        </View>
+        <NavigationContainer>
+          <Stack.Navigator>
+            <Stack.Screen
+              name="Home"
+              component={this._HomeScreen}
+              options={{ title: "메인 화면" }}
+            ></Stack.Screen>
+            <Stack.Screen
+              name="Map"
+              component={this._MapScreen}
+              initialParams={{ COVID: COVID, usrLat: usrLat, usrLon: usrLon }}
+            ></Stack.Screen>
+          </Stack.Navigator>
+        </NavigationContainer>
       );
     }
   }
+  _HomeScreen({ navigation }) {
+    return (
+      <View style={styles.container}>
+        <StatusBar barStyle="dark-content" />
+        <Text>Home Screen</Text>
+        <Button title="지도보기" onPress={() => navigation.navigate("Map")} />
+      </View>
+    );
+  }
+
+  _MapScreen({ route, navigation }) {
+    const { COVID, usrLat, usrLon } = route.params;
+    return <Map usrLat={usrLat} usrLon={usrLon} COVID={COVID} />;
+  }
+
   _addCOVID = (element, longitude, latitude) => {
     this.setState((prevState) => {
       const ID = uuidv1();
@@ -171,7 +171,7 @@ export default class App extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#FFF",
     alignItems: "center",
     justifyContent: "center",
   },
